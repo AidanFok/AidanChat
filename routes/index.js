@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
 
 router.get('/getuser', function(req, res) {
   var data = {
-  	name:"陈泽彬",
+  	name:"霍浩钧",
   	sex:"男",
   	img:"/images/1.jpg"
   };
@@ -20,15 +20,7 @@ router.get('/getuser', function(req, res) {
 router.get('/getalluser', function(req, res) {
   var data = [
   {
-  	name:"陈泽彬",
-  	sex:"男",
-  	img:"/images/1.jpg"
-  },{
-  	name:"陈泽彬",
-  	sex:"男",
-  	img:"/images/1.jpg"
-  },{
-  	name:"陈泽彬",
+  	name:"霍浩钧",
   	sex:"男",
   	img:"/images/1.jpg"
   }];

@@ -216,6 +216,20 @@ io.on('connection',function(socket){
                 to:toName
             }
         */
+       var deleteSQL1 = "delete from message where "
+                  + " (fromuser=  '" + delmsg.from + "' "
+                  + " and touser=  '" + delmsg.to + "')or"
+                  + " (fromuser=  '" + delmsg.to + "' "
+                  + " and touser=  '" + delmsg.from + "');";
+
+            sqlconn.query(deleteSQL1, function (err1, res1) {
+                if (err1) {console.log(err1);}
+                else{
+                console.log("DELETE Return ==> ");
+                console.log(res1);
+            }
+            });
+
        var deleteSQL = "delete from relation where "
                   + " (user=  '" + delmsg.from + "' "
                   + " and friend=  '" + delmsg.to + "')or"
@@ -439,9 +453,9 @@ io.on('connection',function(socket){
 		toSocket.emit('toOne', msgObj);
 	});
 });
-var jj=[{4:1,2:1,3:1},2,3,4,5];
+//var jj=[{4:1,2:1,3:1},2,3,4,5];
 
-console.log(_.findWhere(jj,1));
+//console.log(_.findWhere(jj,1));
 
 
 exports.listen = function(_server){

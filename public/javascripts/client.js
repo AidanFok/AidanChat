@@ -33,7 +33,7 @@ $(function(){
             document.getElementById('status').textContent = 'Email格式不正确';
             $('#email').focus();
         }else{
-			var imgList = ["/images/1.jpg","/images/2.jpg","/images/3.jpg","/images/4.jpg","/images/5.jpg"];
+			var imgList = ["/images/1.jpg","/images/2.jpg","/images/3.jpg"];
 			var randomNum = Math.floor(Math.random()*5);
 			//random user
 			var img = imgList[randomNum];
@@ -69,7 +69,7 @@ $(function(){
             document.getElementById('status2').textContent = '用户名和密码必须在6字节以上';
             $('#username2').focus();
 		}else{
-			var imgList = ["/images/1.jpg","/images/2.jpg","/images/3.jpg","/images/4.jpg","/images/5.jpg"];
+			var imgList = ["/images/1.jpg","/images/2.jpg","/images/3.jpg"];
 			var randomNum = Math.floor(Math.random()*5);
 			//random user
 			var img = imgList[randomNum];
@@ -352,7 +352,7 @@ function addUserOff(userList){
 	parentUl.append(cloneLi);
 	for(var i in userList){
 
-		var imgList = ["/images/1.jpg","/images/2.jpg","/images/3.jpg","/images/4.jpg","/images/5.jpg"];
+		var imgList = ["/images/1.jpg","/images/2.jpg","/images/3.jpg"];
 		var randomNum = Math.floor(Math.random()*5);
 		//random user
 		var img = imgList[randomNum];

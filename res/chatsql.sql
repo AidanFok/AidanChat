@@ -1,3 +1,5 @@
+create database aidanchat;
+	use aidanchat;
 create table user(
 	name varchar(30) primary key unique,
 	password varchar(30),
@@ -16,7 +18,7 @@ create table message(
 create table relation(
     user varchar(30),
     friend varchar(30),
-	state varchar(30),
+	state varchar(30)
 	)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table friendRequest(
