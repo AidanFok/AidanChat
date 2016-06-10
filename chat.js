@@ -184,7 +184,7 @@ io.on('connection',function(socket){
     });
 
     socket.on('listRequest',function(userName){
-        var selectSQL = "select * from friendrequest where toname='" + userName + "';";
+        var selectSQL = "select * from friendRequest where toname='" + userName + "';";
         sqlconn.query(selectSQL,function(err,res){ 
             if (err){console.log(err);}
             else{
@@ -277,7 +277,7 @@ io.on('connection',function(socket){
             }
             });
 
-       var deleteSQL = "delete from friendrequest where "
+       var deleteSQL = "delete from friendRequest where "
                   + " fromname=  '" + accmsg.from + "' "
                   + " and toname=  '" + accmsg.to + "';";
             sqlconn.query(deleteSQL, function (err2, res2) {
@@ -299,7 +299,7 @@ io.on('connection',function(socket){
                 to:toName
             }
         */
-       var deleteSQL = "delete from friendrequest where "
+       var deleteSQL = "delete from friendRequest where "
                   + " fromname=  '" + rejmsg.from + "' "
                   + " and toname=  '" + rejmsg.to + "';";
             sqlconn.query(deleteSQL, function (err, res) {
