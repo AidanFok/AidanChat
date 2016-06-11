@@ -21,7 +21,8 @@ io.on('connection',function(socket){
         var insertSQL = 'insert into user values(';
             insertSQL+= '\'' + user.name + '\',';
             insertSQL+= '\'' + user.password + '\',';
-            insertSQL+= '\'' + user.email + '\',"male")';
+            insertSQL+= '\'' + user.email + '\',';
+            insertSQL+= '\'' + user.gender + '\')';
             sqlconn.query(insertSQL, function (err1, res1) {
                 if (err1) {console.log(err1);socket.emit('userExisted');}
                 else{

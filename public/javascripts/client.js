@@ -23,7 +23,7 @@ $(function(){
 		var name = $('#username').val();
         var password = $('#password').val();
         var email = $('#email').val();
-
+        var gender = $("input[name='gender']:checked").val();
 		if((name.trim().length == 0)||(password.trim().length == 0)||(email.trim().length == 0)){
 			$('#username').val('');$('#password').val('');$('#email').val('');
 			document.getElementById('status').textContent = '输入不能为空';
@@ -46,7 +46,8 @@ $(function(){
 				name:name,
 				password:password,
 				email:email,
-				img:img
+				img:img,
+				gender:gender
 			};
 			//信息发送到server
 			socket.emit('register',dataObj);

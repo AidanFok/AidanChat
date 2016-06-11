@@ -75,7 +75,17 @@ block content
                         .input-group
                             .input-group-addon 邮箱
                             input.form-control#email(type="text",placeHolder="邮箱",onkeydown="javascript:keywordsName(event);")
-                                
+                        .input-group
+                            .input-group-addon 性别
+                            &nbsp; 
+                            input#gender(type="radio",name="gender",value="GG",checked)
+                            &nbsp; 
+                            span GG 
+                            &nbsp;             
+                            input#gender(type="radio",name="gender",value="MM")
+                            &nbsp; 
+                            span MM
+          
                 .modal-footer
                     input.btn.btn-primary#btn-register(type="button",value="注册")
 
