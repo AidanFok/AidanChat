@@ -1,12 +1,16 @@
+//本用户的一些信息
 var userSelf = {};
+//对方ID和名字
 var toOneId;
 var toOneName;
 $(function(){
+	//登录modal
 	$('#myModal').modal({
 		//backdrop: 'static',
 		keyboard: false
 	});
-	
+
+	//提示框方向选择
 	Messenger.options = {
 		extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
 		theme: 'future'
@@ -44,14 +48,11 @@ $(function(){
 				email:email,
 				img:img
 			};
-			//send user info to server
+			//信息发送到server
 			socket.emit('register',dataObj);
-			//hide login modal
-			//$('#myModal').modal('hide');
 			$('#username').val('');
 			$('#password').val('');
 			$('#email').val('');
-			//$('#msg').focus();
 		}
 	});
     
@@ -79,18 +80,14 @@ $(function(){
 				password:password,
 				img:img
 			};
-			//send user info to server
+			//信息发送到server
 			socket.emit('login',dataObj);
-			//hide login modal
-			//$('#myModal').modal('hide');
 			$('#username2').val('');
 			$('#password2').val('');
-			//$('#msg').focus();
 		}
 	});
-     
 
-    //查找好友
+    //查找好友icon
     $('#icon-search').click(function() {
     	$('#searchUser').modal();
         document.getElementById("addReason").style.display="none";
@@ -98,8 +95,33 @@ $(function(){
         document.getElementById("addSendlabel").style.display="none";
 	    $('#searchUserLabel').text("搜索用户");
     });
+    
+    //删除好友icon
+    $('#icon-delete').click(function() {
+    	$('#deleteUser').modal();
+    	$('#deleteUserLabel').text("删除用户");
+    	socket.emit('listFriend',userSelf.name);
+    });
 
-     $('#btn-search').click(function() {
+    //好友申请icon
+    $('#icon-accept').click(function() {
+    	$('#acceptUser').modal();
+    	$('#acceptUserLabel').text("好友申请");
+    	socket.emit('listRequest',userSelf.name);
+    });
+    
+    //分组icon
+    $('#icon-group').click(function() {
+    	$('#groupUser').modal();
+    	document.getElementById("toModify").style.display="none";
+        document.getElementById("groupName").style.display="none";
+        document.getElementById("groupSendlabel").style.display="none";
+    	$('#groupUserLabel').text("修改分组");
+    	socket.emit('listGroup',userSelf.name);
+    });
+
+    //搜索好友
+    $('#btn-search').click(function() {
     	var searchUser = $('#input_searchUser').val();
     	if(searchUser.trim().length == 0){
             $('#input_searchUser').val('');
@@ -108,27 +130,6 @@ $(function(){
     		socket.emit('searchUser',searchUser,userSelf.name);
     		$('#input_searchUser').val('');
     	}	
-    });
-    
-    $('#icon-delete').click(function() {
-    	$('#deleteUser').modal();
-    	$('#deleteUserLabel').text("删除用户");
-    	socket.emit('listFriend',userSelf.name);
-    });
-
-    $('#icon-accept').click(function() {
-    	$('#acceptUser').modal();
-    	$('#acceptUserLabel').text("好友申请");
-    	socket.emit('listRequest',userSelf.name);
-    });
-
-    $('#icon-group').click(function() {
-    	$('#groupUser').modal();
-    	document.getElementById("toModify").style.display="none";
-        document.getElementById("groupName").style.display="none";
-        document.getElementById("groupSendlabel").style.display="none";
-    	$('#groupUserLabel').text("修改分组");
-    	socket.emit('listGroup',userSelf.name);
     });
 
 	//发送信息
@@ -152,79 +153,18 @@ $(function(){
       msg:msg,
       time:myDate
     };
+    //放进sql
     socket.emit('putIntoSql',msgObjSql);
+    //提示框，在线好友专享
     if(toOneId!=undefined){socket.emit('toOne',msgObj);}
-
-    //socket.emit('toAll',msgObj);
+    //自己的消息
     addMsgFromUser(msgObj,true);
     $('#msg').val('');
-    toOneId=undefined;
-  });
-
-
-  $('#clear').click(function(){
-    $('#msgcontent').text('');
-  });
-
-  $('#refresh').click(function(){
-    socket.emit('findFriend',userSelf);
-  });
-
-  //发送图片
-  $('#sendImage').change(function(){
-  	if(this.files.length != 0){
-  		var file = this.files[0];
-  		reader = new FileReader();
-  		if(!reader){
-  			alert("!your browser doesn\'t support fileReader");
-  			return;
-  		}
-  		reader.onload = function(e){
-  			//console.log(e.target.result);
-  			var msgObj = {
-  				from:userSelf,
-  				img:e.target.result
-  			};
-  			socket.emit('sendImageToALL',msgObj);
-  			addImgFromUser(msgObj,true);
-  		};
-  		reader.readAsDataURL(file);
-  	}
-  });
-
-  //已无用
-  $('#btn_toOne').click(function(){
-  	var msg = $('#input_msgToOne').val();
-  	if(msg==''){
-      alert('Please enter the message content!');
-      return;
-    }
-  	var msgObj = {
-  		from:userSelf,
-  		to:toOneId,
-  		msg:msg
-  	};
-  	socket.emit('toOne',msgObj);
-  	$('#setMsgToOne').modal('hide');
-  	$('#input_msgToOne').val('');
   });
 
 });
 
-//向panel添加图片
-function addImgFromUser(msgObj,isSelf){
-	var msgType = isSelf?"message-reply":"message-receive";
-	var msgHtml = $('<div><div class="message-info"><div class="user-info"><img src="/images/1.jpg" class="user-avatar img-thumbnail"></div><div class="message-content-box"><div class="arrow"></div><div class="message-content">test</div></div></div></div>');
-	msgHtml.addClass(msgType);
-	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('src',userSelf.img);
-	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('title',msgObj.from.name);
-	msgHtml.children('.message-info').children('.message-content-box').children('.message-content').html("<img src='"+msgObj.img+"'>");
-	$('.msg-content').append(msgHtml);
-	//滚动条一直在最底
-	$(".msg-content").scrollTop($(".msg-content")[0].scrollHeight);
-}
-
-//向panel添加信息
+//向panel添加历史信息
 function addMsgFromUserPre(msgObj,isSelf){
 	$('.msg-content').append(msgObj.time);
 	var msgType = isSelf?"message-reply":"message-receive";
@@ -238,8 +178,7 @@ function addMsgFromUserPre(msgObj,isSelf){
 	$(".msg-content").scrollTop($(".msg-content")[0].scrollHeight);
 }
 
-
-//向panel添加信息
+//向panel添加当前信息
 function addMsgFromUser(msgObj,isSelf){
 	$('.msg-content').append(msgObj.time);
 	var msgType = isSelf?"message-reply":"message-receive";
@@ -253,23 +192,10 @@ function addMsgFromUser(msgObj,isSelf){
 	$(".msg-content").scrollTop($(".msg-content")[0].scrollHeight);
 }
 
-//add msg from system in UI
+//系统信息
 function addMsgFromSys(msg){
 	$.scojs_message(msg, $.scojs_message.TYPE_OK);
 }
-
-//check is the username exist.
-/*function checkUser(name){
-	var haveName = false;
-	$(".user-content").children('ul').children('li').each(function(){
-		if(name == $(this).find('span').text()){
-			haveName = true;
-		}
-	});
-	return haveName;
-}*/
-
-
 
 //在线好友定位到panel
 function focusOnPanelOnline(name,id){
@@ -293,6 +219,7 @@ function focusOnPanelOffline(name){
 	$('#chatTitle').text("Send to "+name);
 	$('#msgcontent').text('');
 	toOneName = name;
+	toOneId = undefined;
 	var msgObj = {
   		from:userSelf.name,
   		frompic:userSelf.img,
@@ -314,6 +241,7 @@ function addFriendRequest(fromName,toName){
 	socket.emit('addFriendRequest',addmsg);
 }
 
+//修改分组申请
 function groupModifyRequest(fromName,toName){
 	var groupName=$('#groupName').val();
 	if(groupName.trim().length == 0){
@@ -327,6 +255,7 @@ function groupModifyRequest(fromName,toName){
 	socket.emit('groupModifyRequest',groupmsg);
 }
 
+//显示好友用于分组
 function showGroupModify(fromName,toName,groupName){
   document.getElementById("groupnamelist").style.display="none";
   document.getElementById("toModify").style.display="inline";
@@ -337,6 +266,7 @@ function showGroupModify(fromName,toName,groupName){
   $('#groupSendlabel').append("<a href=\"javascript:groupModifyRequest(\'"+fromName+"\',\'"+toName+"\');\">"+'点击提交');
 }
 
+//删除好友申请
 function delFriendRequest(fromName,toName){
     var delmsg={
     	from:fromName,
@@ -345,6 +275,7 @@ function delFriendRequest(fromName,toName){
 	socket.emit('delFriendRequest',delmsg);
 }
 
+//接受好友申请
 function acceptRequest(fromName,toName){
     var accmsg={
     	from:fromName,
@@ -352,6 +283,7 @@ function acceptRequest(fromName,toName){
     };
 	socket.emit('accFriendRequest',accmsg);
 }
+//拒绝好友申请
 function rejectRequest(fromName,toName){
     var rejmsg={
     	from:fromName,
@@ -432,6 +364,7 @@ function refreshFriend(){
 	socket.emit('findFriend',userSelf);
 }
 
+//时间函数
 function gettime(){
     var year = new Date().getFullYear();       //年
     var month = new Date().getMonth()+1;         //月
