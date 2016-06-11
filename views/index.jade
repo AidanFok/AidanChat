@@ -41,7 +41,7 @@ block content
                                 span.glyphicon.glyphicon-minus 
                             button.btn.btn-warning#icon-accept(type="button")
                                 span.glyphicon.glyphicon-envelope
-                            button.btn.btn-warning(type="button")
+                            button.btn.btn-warning#icon-group(type="button")
                                 span.glyphicon.glyphicon-user
             .col-sm-9
                 .panel.panel-success
@@ -65,10 +65,6 @@ block content
                             input.form-control#msg(type="text",placeholder="请输入聊天内容",onkeydown="javascript:keywordsMsg(event);")
                             span.input-group-btn
                                 button.btn.btn-warning#sendMsg(type="button") 发送/Send
-
-                        .input-group
-                            span.input-group-btn
-                                button.btn.btn-warning#clear(type="button") 清除聊天记录
                         
     .modal.fade#myModal(tabindex="-1")
         .modal-dialog
@@ -137,7 +133,19 @@ block content
                 .modal-body
                     h5.modal-title#accnamelist
                 .modal-footer
+    
+     .modal.fade#groupUser(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h4.modal-title#groupUserLabel
+                .modal-body
+                    h5.modal-title#groupnamelist
 
+                    h5.modal-title#toModify
+                    input.form-control#groupName(type="text") 
+                    h5.modal-title#groupSendlabel
+                .modal-footer
 
     script(src="/socket.io/socket.io.js")
     script(src='/javascripts/chatjs.js')

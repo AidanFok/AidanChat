@@ -93,9 +93,8 @@ io.on('connection',function(socket){
         });
         console.log(userList);
         console.log('myfindFriend is called ');
-		var selectSQL1 = "select friend from relation where "
-                  + " user= '" + user.name + "' "
-                  + " and state= '1'";
+		var selectSQL1 = "select * from relation where "
+                  + " user= '" + user.name + "';"
         sqlconn.query(selectSQL1, function (err1, res1) {
             if (err1) {console.log(err1);}
             else{
@@ -106,10 +105,20 @@ io.on('connection',function(socket){
                     console.log(findUser);
                     console.log(res1[i]);
                     if(findUser){console.log('online called');
+                        findUser.state=res1[i].state;
                     	onlineList.push(findUser);}
                     else{console.log('offline called');
-                    	offlineList.push(res1[i].friend);}
+                    var offuser={
+                        name:res1[i].friend,
+                        state:res1[i].state};
+                    	offlineList.push(offuser);}
                 }
+            onlineList=onlineList.sort(function(x, y){
+                return x.state > y.state ? 1:-1;
+            });
+            offlineList=offlineList.sort(function(x, y){
+                return x.state > y.state ? 1:-1;
+            });
             socket.emit('onlineList',onlineList); 
             socket.emit('offlineList',offlineList);
             
@@ -118,9 +127,8 @@ io.on('connection',function(socket){
 	});
 
     socket.on('findFriend',function(userSelf){
-    	console.log('findFriend is called ');
-    	
-		var selectSQL1 = "select friend from relation where "
+    	console.log('findFriend is called ');	
+		var selectSQL1 = "select * from relation where "
                   + " user= '" + userSelf.name + "';"
         sqlconn.query(selectSQL1, function (err1, res1) {
             if (err1) {console.log(err1);}
@@ -132,10 +140,20 @@ io.on('connection',function(socket){
                     console.log(findUser);
                     console.log(res1[i]);
                     if(findUser){console.log('online called');
+                        findUser.state=res1[i].state;
                     	onlineList.push(findUser);}
                     else{console.log('offline called');
-                    	offlineList.push(res1[i].friend);}
+                        var offuser={
+                        name:res1[i].friend,
+                        state:res1[i].state};
+                    	offlineList.push(offuser);}
                 }
+            onlineList=onlineList.sort(function(x, y){
+                return x.state > y.state ? 1:-1;
+            });
+            offlineList=offlineList.sort(function(x, y){
+                return x.state > y.state ? 1:-1;
+            });
             socket.emit('onlineList',onlineList); 
             socket.emit('offlineList',offlineList);
            
@@ -179,6 +197,18 @@ io.on('connection',function(socket){
                 console.log('friendlist');
                 console.log(res);
                 if(res)socket.emit('friendResult',res);
+                }
+        });
+    });
+    
+    socket.on('listGroup',function(userName){
+        var selectSQL = "select * from relation where user='" + userName + "';";
+        sqlconn.query(selectSQL,function(err,res){ 
+            if (err){console.log(err);}
+            else{
+                console.log('grouplist');
+                console.log(res);
+                if(res)socket.emit('groupResult',res);
                 }
         });
     });
@@ -242,9 +272,33 @@ io.on('connection',function(socket){
                 console.log("DELETE Return ==> ");
                 console.log(res);
                 socket.emit('deleteSuccess');
+                socket.broadcast.emit('refreshFriend');
             }
             });
     });
+
+    socket.on('groupModifyRequest',function(groupmsg){
+        console.log('groupModifyRequest is called');
+       /* var groupmsg={
+        from:fromName,
+        to:toName,
+        group:groupName
+    };*/
+        var updateSQL ='update relation set state=';
+        updateSQL +='\'' + groupmsg.group + '\'';
+        updateSQL +='where user="'+groupmsg.from+'"and ';
+        updateSQL +='friend="'+groupmsg.to+'";';
+
+        sqlconn.query(updateSQL, function (err, res) {
+                if (err) {console.log(err);}
+                else{
+                console.log("UPDATE Return ==> ");
+                console.log(res);
+                socket.emit('updateSuccess');
+            }
+            });
+    });
+    
 
     socket.on('accFriendRequest',function(accmsg){
         console.log('accFriendRequest is called');
@@ -257,7 +311,7 @@ io.on('connection',function(socket){
         var insertSQL = 'insert into relation values(';
             insertSQL+= '\'' + accmsg.from + '\',';
             insertSQL+= '\'' + accmsg.to + '\',';
-            insertSQL+= '1)';
+            insertSQL+= '"未分组")';
             sqlconn.query(insertSQL, function (err, res) {
                 if (err) {console.log(err);}
                 else{
@@ -268,7 +322,7 @@ io.on('connection',function(socket){
         var insertSQL1 = 'insert into relation values(';
             insertSQL1+= '\'' + accmsg.to + '\',';
             insertSQL1+= '\'' + accmsg.from + '\',';
-            insertSQL1+= '1)';
+            insertSQL1+= '"未分组")';
             sqlconn.query(insertSQL1, function (err1, res1) {
                 if (err1) {console.log(err1);}
                 else{
@@ -350,8 +404,8 @@ io.on('connection',function(socket){
             insertSQL+= '\'' + msgObj.from + '\',';
             insertSQL+= '\'' + msgObj.to + '\',';
             insertSQL+= '\'' + msgObj.msg + '\',';
-            insertSQL+= '\'' + msgObj.time + '\',';
-            insertSQL+= '1)';
+            insertSQL+= '\'' + msgObj.time + '\')';
+
             sqlconn.query(insertSQL, function (err1, res1) {
                 if (err1) {console.log(err1);}
                 else{
@@ -454,9 +508,15 @@ io.on('connection',function(socket){
 	});
 });
 //var jj=[{4:1,2:1,3:1},2,3,4,5];
+//qqq=_.findWhere(jj,1);
+//qqq.state='state';
+//console.log(qqq);
 
-//console.log(_.findWhere(jj,1));
-
+//var test=[{name:'bidan',age:18},{name:'aidan',age:17},{name:'1',age:16}];
+//test=test.sort(function(x, y){
+//    return x.name > y.name ? 1:-1;
+//});
+//console.log(test);
 
 exports.listen = function(_server){
 	io.listen(_server);

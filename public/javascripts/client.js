@@ -122,6 +122,15 @@ $(function(){
     	socket.emit('listRequest',userSelf.name);
     });
 
+    $('#icon-group').click(function() {
+    	$('#groupUser').modal();
+    	document.getElementById("toModify").style.display="none";
+        document.getElementById("groupName").style.display="none";
+        document.getElementById("groupSendlabel").style.display="none";
+    	$('#groupUserLabel').text("修改分组");
+    	socket.emit('listGroup',userSelf.name);
+    });
+
 	//发送信息
     $('#sendMsg').click(function(){
     var msg = $('#msg').val();
@@ -305,6 +314,29 @@ function addFriendRequest(fromName,toName){
 	socket.emit('addFriendRequest',addmsg);
 }
 
+function groupModifyRequest(fromName,toName){
+	var groupName=$('#groupName').val();
+	if(groupName.trim().length == 0){
+		groupName='未分组';
+	}
+    var groupmsg={
+    	from:fromName,
+    	to:toName,
+    	group:groupName
+    };
+	socket.emit('groupModifyRequest',groupmsg);
+}
+
+function showGroupModify(fromName,toName,groupName){
+  document.getElementById("groupnamelist").style.display="none";
+  document.getElementById("toModify").style.display="inline";
+  document.getElementById("groupName").style.display="inline";
+  document.getElementById("groupSendlabel").style.display="inline";
+  $('#toModify').text('用户名：'+toName+' 组号：'+groupName+' 修改分组为：');
+  $('#groupSendlabel').text('');
+  $('#groupSendlabel').append("<a href=\"javascript:groupModifyRequest(\'"+fromName+"\',\'"+toName+"\');\">"+'点击提交');
+}
+
 function delFriendRequest(fromName,toName){
     var delmsg={
     	from:fromName,
@@ -338,7 +370,7 @@ function addUserOn(userList){
 		var cloneLi = parentUl.children('li:first').clone();
 		cloneLi.children('a').attr('href',"javascript:focusOnPanelOnline('"+userList[i].name+"','"+userList[i].id+"');");
 		cloneLi.children('a').children('img').attr('src',userList[i].img);
-		cloneLi.children('a').children('span').text(userList[i].name);
+		cloneLi.children('a').children('span').text(userList[i].name+'   ('+userList[i].state+')');
 		cloneLi.show();
 		parentUl.append(cloneLi);
 	}
@@ -351,16 +383,15 @@ function addUserOff(userList){
 	parentUl.html('');
 	parentUl.append(cloneLi);
 	for(var i in userList){
-
 		var imgList = ["/images/1.jpg","/images/2.jpg","/images/3.jpg"];
 		var randomNum = Math.floor(Math.random()*5);
 		//random user
 		var img = imgList[randomNum];
 
 		var cloneLi = parentUl.children('li:first').clone();
-		cloneLi.children('a').attr('href',"javascript:focusOnPanelOffline('"+userList[i]+"');");
+		cloneLi.children('a').attr('href',"javascript:focusOnPanelOffline('"+userList[i].name+"');");
 		cloneLi.children('a').children('img').attr('src',img);
-		cloneLi.children('a').children('span').text(userList[i]);
+		cloneLi.children('a').children('span').text(userList[i].name+'   ('+userList[i].state+')');
 		cloneLi.show();
 		parentUl.append(cloneLi);
 	}

@@ -81,7 +81,7 @@ socket.on('searchResult',function(result){
   document.getElementById("addReason").style.display="inline";
   document.getElementById("namelist").style.display="inline";
   document.getElementById("addSendlabel").style.display="inline";
-  
+  $('#addSendlabel').text('');
   $('#addSendlabel').append("<a href=\"javascript:addFriendRequest(\'"+userSelf.name+"\',\'"+result.name+"\');\">"+'点击发送申请');
 });
 
@@ -95,7 +95,16 @@ socket.on('friendResult',function(result){
   $('#delnamelist').text('');
   for(var i=0;i<result.length;i++){
     $('#delnamelist').append('用户名：'+result[i].friend+"<a href=\"javascript:delFriendRequest(\'"+userSelf.name+"\',\'"+result[i].friend+"\');\">"+'   点击删除');
-    $('#accnamelist').append(document.createElement("br"));
+    $('#delnamelist').append(document.createElement("br"));
+  }
+});
+
+socket.on('groupResult',function(result){
+  document.getElementById("groupnamelist").style.display="inline";
+  $('#groupnamelist').text('');
+  for(var i=0;i<result.length;i++){
+    $('#groupnamelist').append('用户名：'+result[i].friend+'   所在组：'+result[i].state+"<a href=\"javascript:showGroupModify(\'"+userSelf.name+"\',\'"+result[i].friend+"\',\'"+result[i].state+"\');\">"+'   点击修改分组');
+    $('#groupnamelist').append(document.createElement("br"));
   }
 });
 
@@ -103,6 +112,13 @@ socket.on('deleteSuccess',function(){
   refreshFriend();
   alert('删除成功');
   $('#deleteUser').modal('hide');
+  return;
+});
+
+socket.on('updateSuccess',function(){
+  refreshFriend();
+  alert('修改分组成功');
+  $('#groupUser').modal('hide');
   return;
 });
 
