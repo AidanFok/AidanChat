@@ -66,7 +66,8 @@ socket.on('toOne',function(msgObj){
     message: "<a href=\"javascript:focusOnPanelOnline(\'"+msgObj.from.name+"\',\'"+msgObj.from.id+"\');\">"+msgObj.from.name + " send to you a message:"+ msgObj.msg+"</a>",
     showCloseButton: true
   });
-  addMsgFromUser(msgObj,false);
+  if(toOneName==msgObj.from.name){
+  addMsgFromUser(msgObj,false);}
 });
 
 //显示消息到面板
@@ -132,6 +133,8 @@ socket.on('deleteSuccess',function(){
   refreshFriend();
   alert('删除成功');
   $('#deleteUser').modal('hide');
+  $('#msgcontent').text('');
+  $('#chatTitle').text('聊天室');
   return;
 });
 
