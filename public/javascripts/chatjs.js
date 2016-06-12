@@ -24,7 +24,7 @@ socket.on('userExisted', function() {
 
 //查无此人
 socket.on('userNotExist', function() {
-  alert('查无此人');
+  alert('用户不存在或者密码错误');
   return;
 });
 
