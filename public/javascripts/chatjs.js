@@ -63,7 +63,7 @@ socket.on('userInfo',function(userObj){
 //接收信息
 socket.on('toOne',function(msgObj){
   Messenger().post({
-    message: "<a href=\"javascript:focusOnPanelOnline(\'"+msgObj.from.name+"\',\'"+msgObj.from.id+"\');\">"+msgObj.from.name + " send to you a message:"+ msgObj.msg+"</a>",
+    message: "<a href=\"javascript:focusOnPanelOnline(\'"+msgObj.from.name+"\',\'"+msgObj.from.id+"\');\">"+msgObj.from.name + " 对你说:"+ msgObj.msg+"</a>",
     showCloseButton: true
   });
   if(toOneName==msgObj.from.name){
