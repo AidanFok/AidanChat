@@ -256,8 +256,7 @@ io.on('connection',function(socket){
                 console.log(res1);
             }
             });
-
-       var deleteSQL = "delete from friendRequest where "
+        var deleteSQL = "delete from friendRequest where "
                   + " fromname=  '" + accmsg.from + "' "
                   + " and toname=  '" + accmsg.to + "';";
             sqlconn.query(deleteSQL, function (err2, res2) {
@@ -267,6 +266,18 @@ io.on('connection',function(socket){
                 console.log(res2);
                 socket.emit('acceptSuccess');
                 socket.broadcast.emit('refreshFriend');
+            }
+            });
+        var deleteSQL = "delete from friendRequest where "
+                  + " fromname=  '" + accmsg.to + "' "
+                  + " and toname=  '" + accmsg.from + "';";
+            sqlconn.query(deleteSQL, function (err3, res3) {
+                if (err3) {console.log(err3);}
+                else{
+                console.log("DELETE Return ==> ");
+                console.log(res3);
+                //socket.emit('acceptSuccess');
+                //socket.broadcast.emit('refreshFriend');
             }
             });
     });

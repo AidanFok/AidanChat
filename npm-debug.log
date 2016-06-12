@@ -20,7 +20,7 @@
 9 verbose stack     at maybeClose (internal/child_process.js:827:16)
 9 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
 10 verbose pkgid mydemo@0.0.1
-11 verbose cwd /Applications/XAMPP/xamppfiles/htdocs/aidanchatnew
+11 verbose cwd /Applications/XAMPP/xamppfiles/htdocs/aidanchat
 12 error Darwin 15.5.0
 13 error argv "/Users/aidanfok/.nvm/versions/node/v4.4.4/bin/node" "/Users/aidanfok/.nvm/versions/node/v4.4.4/bin/npm" "start"
 14 error node v4.4.4
