@@ -55,13 +55,14 @@ block content
                         .input-group
                             input.form-control#msg(type="text",placeholder="请输入聊天内容",onkeydown="javascript:keywordsMsg(event);")
                             span.input-group-btn
-                                button.btn.btn-warning#sendMsg(type="button") 发送/Send
+                                button.btn.btn-warning#sendMsg(type="button") 发送
                         
     .modal.fade#myModal(tabindex="-1")
         .modal-dialog
             .modal-content
                 
                 .modal-header
+                    h2.modal-title(style="text-align:center") Welcome to Aidan Chat
                     h4.modal-title#myModalLabel 注册
                     h5.modal-title#status 输入你的信息
                 .modal-body
@@ -87,7 +88,7 @@ block content
                             span MM
           
                 .modal-footer
-                    input.btn.btn-primary#btn-register(type="button",value="注册")
+                    input.btn.btn-warning#btn-register(type="button",value="注册")
 
                 .modal-header
                     h4.modal-title#myModalLabel 登录
@@ -102,7 +103,7 @@ block content
                             input.form-control#password2(type="text",placeHolder="密码",onkeydown="javascript:keywordsName2(event);")
                                 
                 .modal-footer
-                    input.btn.btn-primary#btn-login(type="button",value="登录",onkeydown="javascript:keywordsName2(event);")
+                    input.btn.btn-warning#btn-login(type="button",value="登录",onkeydown="javascript:keywordsName2(event);")
 
     .modal.fade#searchUser(tabindex="-1")
         .modal-dialog
@@ -115,7 +116,7 @@ block content
                     input.form-control#addReason(type="text") 
                     h5.modal-title#addSendlabel
                 .modal-footer
-                    input.btn.btn-primary#btn-search(type="button",value="发送/Send")
+                    input.btn.btn-warning#btn-search(type="button",value="搜索")
 
     .modal.fade#deleteUser(tabindex="-1")
         .modal-dialog
